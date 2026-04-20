@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Key Mensual</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;700&family=Barlow+Condensed:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #07080d;
+  --surface: #0d0f18;
+  --border: #1c1f2e;
+  --border2: #252840;
+  --green: #00ff88;
+  --red: #ff3b5c;
+  --yellow: #ffd23f;
+  --blue: #4cc9f0;
+  --purple: #7c3aed;
+  --text: #c8d0e0;
+  --muted: #454d66;
+  --mono: 'IBM Plex Mono', monospace;
+  --display: 'Barlow Condensed', sans-serif;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--mono);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 24px 16px;
+  overflow-x: hidden;
+  position: relative;
+}
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background:
+    repeating-linear-gradient(0deg,transparent,transparent 39px,rgba(28,31,46,0.35) 39px,rgba(28,31,46,0.35) 40px),
+    repeating-linear-gradient(90deg,transparent,transparent 39px,rgba(28,31,46,0.15) 39px,rgba(28,31,46,0.15) 40px);
+  pointer-events: none;
+  z-index: 0;
+}
+.orb {
+  position: fixed; border-radius: 50%; filter: blur(90px); pointer-events: none; z-index: 0;
+}
+.orb1 { width: 450px; height: 450px; background: rgba(124,58,237,0.05); top:-120px; left:-100px; }
+.orb2 { width: 350px; height: 350px; background: rgba(0,255,136,0.04); bottom:-80px; right:-60px; }
+.wrap {
+  position: relative; z-index: 1;
+  width: 100%; max-width: 420px;
+  animation: up .5s ease both;
+}
+@keyframes up { from{opacity:0;transform:translateY(20px)} to{opacity:1;transform:translateY(0)} }
+.logo {
+  font-family: var(--display);
+  font-size: 38px; font-weight: 800;
+  text-transform: uppercase;
+  color: #fff;
+  letter-spacing: 1px;
+  margin-bottom: 6px;
+}
+.logo span { color: var(--green); }
+.subtitle {
+  font-size: 10px; letter-spacing: 3px;
+  text-transform: uppercase; color: var(--muted);
+  margin-bottom: 28px;
+}
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border2);
+  border-radius: 6px;
+  overflow: hidden;
+  position: relative;
+}
+.card::before {
+  content: '';
+  position: absolute; top:0; left:0; right:0; height:1px;
+  background: linear-gradient(90deg, transparent, var(--purple), var(--blue), transparent);
+  opacity: .7;
+}
+/* ── SCREENS ── */
+.screen { display: none; padding: 28px; }
+.screen.active { display: block; }
+
+/* ── SCREEN 1: PAGO ── */
+.product-row {
+  display: flex; align-items: center; gap: 14px; margin-bottom: 24px;
+}
+.product-icon {
+  width: 52px; height: 52px;
+  background: linear-gradient(135deg,rgba(124,58,237,.2),rgba(0,255,136,.15));
+  border: 1px solid rgba(124,58,237,.3);
+  border-radius: 12px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 24px; flex-shrink: 0;
+}
+.product-name {
+  font-family: var(--display);
+  font-size: 22px; font-weight: 800;
+  background: linear-gradient(135deg,#e2e8f0,#a78bfa);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+}
+.product-sub { font-size: 11px; color: var(--muted); margin-top: 3px; letter-spacing: .5px; }
+.features { display: flex; flex-direction: column; gap: 9px; margin-bottom: 22px; }
+.feat {
+  display: flex; align-items: center; gap: 10px;
+  font-size: 13px; color: #94a3b8;
+}
+.feat-dot {
+  width: 5px; height: 5px; border-radius: 50%; flex-shrink: 0;
+  background: linear-gradient(135deg, var(--purple), var(--blue));
+}
+.price-box {
+  display: flex; align-items: flex-end; justify-content: space-between;
+  padding: 14px 16px; margin-bottom: 22px;
+  background: rgba(255,255,255,.02);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+}
+.price-lbl { font-size: 11px; color: var(--muted); margin-bottom: 4px; }
+.price-val {
+  font-family: var(--mono); font-size: 30px; font-weight: 700; color: #fff;
+}
+.price-val span { font-size: 15px; color: var(--muted); }
+.price-tag {
+  font-size: 10px; letter-spacing: 1px;
+  color: var(--blue);
+  background: rgba(76,201,240,.1);
+  border: 1px solid rgba(76,201,240,.2);
+  padding: 4px 10px; border-radius: 20px;
+}
+#paypal-btn-container { margin-bottom: 14px; min-height: 48px; }
+.secure-note {
+  display: flex; align-items: center; justify-content: center; gap: 6px;
+  font-size: 11px; color: var(--muted);
+}
+.secure-note svg { width: 12px; height: 12px; }
+
+/* ── SCREEN 2: PROCESANDO ── */
+.processing-wrap {
+  display: flex; flex-direction: column; align-items: center;
+  padding: 40px 28px; gap: 18px;
+}
+.spinner {
+  width: 56px; height: 56px;
+  border: 2px solid var(--border2);
+  border-top-color: var(--blue);
+  border-radius: 50%;
+  animation: spin .8s linear infinite;
+}
+@keyframes spin { to{transform:rotate(360deg)} }
+.processing-title {
+  font-family: var(--display); font-size: 20px; font-weight: 700;
+  color: var(--blue); letter-spacing: 1px; text-transform: uppercase;
+}
+.processing-sub { font-size: 12px; color: var(--muted); text-align: center; line-height: 1.7; }
+
+/* ── SCREEN 3: ÉXITO ── */
+.success-wrap { text-align: center; }
+.success-ring {
+  width: 72px; height: 72px;
+  border: 2px solid var(--green);
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 30px; margin: 0 auto 20px;
+  background: rgba(0,255,136,.07);
+  box-shadow: 0 0 24px rgba(0,255,136,.15);
+  animation: pop .4s cubic-bezier(.34,1.56,.64,1) both;
+}
+@keyframes pop { from{transform:scale(.5);opacity:0} to{transform:scale(1);opacity:1} }
+.success-title {
+  font-family: var(--display); font-size: 26px; font-weight: 800;
+  color: var(--green); letter-spacing: 1px; margin-bottom: 6px;
+}
+.success-msg { font-size: 12px; color: var(--muted); line-height: 1.7; margin-bottom: 22px; }
+.info-grid { display: flex; flex-direction: column; gap: 8px; margin-bottom: 20px; }
+.info-row {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 10px 14px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  font-size: 12px;
+}
+.info-k { color: var(--muted); letter-spacing: 1px; text-transform: uppercase; font-size: 10px; }
+.info-v { color: var(--text); font-weight: 500; }
+.info-v.green { color: var(--green); }
+.sub-id-box {
+  padding: 12px 14px;
+  background: rgba(0,255,136,.05);
+  border: 1px solid rgba(0,255,136,.2);
+  border-radius: 4px;
+  margin-bottom: 20px;
+}
+.sub-id-label { font-size: 9px; letter-spacing: 2px; color: var(--green); text-transform: uppercase; margin-bottom: 5px; }
+.sub-id-val { font-size: 13px; color: #fff; word-break: break-all; }
+.discord-note {
+  display: flex; align-items: center; gap: 8px;
+  padding: 12px 14px;
+  background: rgba(124,58,237,.08);
+  border: 1px solid rgba(124,58,237,.2);
+  border-radius: 4px;
+  font-size: 12px; color: #a78bfa;
+}
+
+/* ── SCREEN 4: ERROR ── */
+.error-wrap { text-align: center; padding: 10px 0; }
+.error-ring {
+  width: 64px; height: 64px;
+  border: 2px solid var(--red);
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 26px; margin: 0 auto 18px;
+  background: rgba(255,59,92,.07);
+}
+.error-title {
+  font-family: var(--display); font-size: 22px; font-weight: 800;
+  color: var(--red); margin-bottom: 8px;
+}
+.error-msg { font-size: 12px; color: var(--muted); line-height: 1.7; margin-bottom: 20px; }
+.btn-retry {
+  background: transparent;
+  border: 1px solid var(--border2);
+  color: var(--text);
+  font-family: var(--mono); font-size: 12px;
+  letter-spacing: 2px; text-transform: uppercase;
+  padding: 12px 24px; border-radius: 4px;
+  cursor: pointer; transition: border-color .2s;
+}
+.btn-retry:hover { border-color: var(--text); }
+</style>
+</head>
+<body>
+<div class="orb orb1"></div>
+<div class="orb orb2"></div>
+<div class="wrap">
+  <div class="logo">KEY<span>PASS</span></div>
+  <div class="subtitle">// suscripción mensual</div>
+  <div class="card">
+
+    <!-- SCREEN 1: PAGO -->
+    <div class="screen active" id="s-pay">
+      <div class="product-row">
+        <div class="product-icon">🔑</div>
+        <div>
+          <div class="product-name">Key Mensual</div>
+          <div class="product-sub">Acceso completo · 30 días · renovación auto</div>
+        </div>
+      </div>
+      <div class="features">
+        <div class="feat"><div class="feat-dot"></div>Acceso completo al script por 30 días</div>
+        <div class="feat"><div class="feat-dot"></div>Key entregada por Discord</div>
+        <div class="feat"><div class="feat-dot"></div>Soporte incluido</div>
+        <div class="feat"><div class="feat-dot"></div>Renovación automática mensual</div>
+      </div>
+      <div class="price-box">
+        <div>
+          <div class="price-lbl">Total mensual</div>
+          <div class="price-val"><span>$</span>10.00</div>
+        </div>
+        <div class="price-tag">USD · /mes</div>
+      </div>
+      <div id="paypal-btn-container"></div>
+      <div class="secure-note">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+        </svg>
+        Pago 100% seguro con PayPal
+      </div>
+    </div>
+
+    <!-- SCREEN 2: PROCESANDO -->
+    <div class="screen" id="s-processing">
+      <div class="processing-wrap">
+        <div class="spinner"></div>
+        <div class="processing-title">Verificando pago...</div>
+        <div class="processing-sub">Confirmando tu suscripción con PayPal.<br>Esto toma unos segundos.</div>
+      </div>
+    </div>
+
+    <!-- SCREEN 3: ÉXITO -->
+    <div class="screen" id="s-success">
+      <div class="success-wrap">
+        <div class="success-ring">✓</div>
+        <div class="success-title">¡Suscripción Activa!</div>
+        <div class="success-msg">Tu pago fue procesado correctamente.<br>Guarda tu Subscription ID.</div>
+        <div class="sub-id-box">
+          <div class="sub-id-label">Subscription ID</div>
+          <div class="sub-id-val" id="res-subid">—</div>
+        </div>
+        <div class="info-grid">
+          <div class="info-row">
+            <span class="info-k">Estado</span>
+            <span class="info-v green" id="res-status">ACTIVO</span>
+          </div>
+          <div class="info-row">
+            <span class="info-k">Activado</span>
+            <span class="info-v" id="res-created">—</span>
+          </div>
+          <div class="info-row">
+            <span class="info-k">Próximo cobro</span>
+            <span class="info-v green" id="res-expiry">—</span>
+          </div>
+          <div class="info-row">
+            <span class="info-k">Email</span>
+            <span class="info-v" id="res-email">—</span>
+          </div>
+        </div>
+        <div class="discord-note">
+          💬 Recibirás tu Key en Discord en los próximos minutos.
+        </div>
+      </div>
+    </div>
+
+    <!-- SCREEN 4: ERROR -->
+    <div class="screen" id="s-error">
+      <div class="error-wrap">
+        <div class="error-ring">✕</div>
+        <div class="error-title">Error al verificar</div>
+        <div class="error-msg" id="err-msg">No se pudo confirmar tu suscripción.<br>Contacta soporte con tu Subscription ID.</div>
+        <button class="btn-retry" onclick="showScreen('s-pay')">[ REINTENTAR ]</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script src="https://www.paypal.com/sdk/js?client-id=AaG1FuyEHFsbYDPD1B9ghATqo2kia7aEmoopsjd8JY04dAo-KJxpF-YPGy-ZulOz5huvXBhsqMjAVXZ1&vault=true&intent=subscription"></script>
+<script>
+const WORKER_URL = "https://suscripcionpago.armijosfer2.workers.dev"
+const PLAN_ID    = "P-282360532R4706921NHS2K6Q"
+function showScreen(id) {
+  document.querySelectorAll(".screen").forEach(s => s.classList.remove("active"))
+  document.getElementById(id).classList.add("active")
+}
+function fmt(iso) {
+  if (!iso) return "—"
+  return new Date(iso).toLocaleDateString("es-MX", {day:"2-digit", month:"short", year:"numeric"})
+}
+async function verificarSub(subId) {
+  const r = await fetch(WORKER_URL + "/sub-check?id=" + encodeURIComponent(subId))
+  return r.json()
+}
+paypal.Buttons({
+  style: { shape: "pill", color: "blue", layout: "vertical", label: "subscribe" },
+  createSubscription: function(data, actions) {
+    return actions.subscription.create({ plan_id: PLAN_ID })
+  },
+  onApprove: async function(data) {
+    showScreen("s-processing")
+    await new Promise(r => setTimeout(r, 1500))
+    try {
+      const sub = await verificarSub(data.subscriptionID)
+      if (sub.found && sub.active) {
+        document.getElementById("res-subid").textContent  = data.subscriptionID
+        document.getElementById("res-status").textContent = sub.status || "ACTIVE"
+        document.getElementById("res-created").textContent = fmt(sub.created)
+        document.getElementById("res-expiry").textContent  = fmt(sub.expiry)
+        document.getElementById("res-email").textContent   = sub.email || "—"
+        showScreen("s-success")
+      } else {
+        document.getElementById("err-msg").textContent =
+          "Pago recibido pero la suscripción aún no se activó.\nID: " + data.subscriptionID + "\nContacta soporte."
+        showScreen("s-error")
+      }
+    } catch(e) {
+      document.getElementById("err-msg").textContent =
+        "Error de conexión. Guarda tu ID: " + data.subscriptionID
+      showScreen("s-error")
+    }
+  },
+  onError: function(err) {
+    document.getElementById("err-msg").textContent = "Error en el pago. Intenta de nuevo."
+    showScreen("s-error")
+    console.error(err)
+  }
+}).render("#paypal-btn-container")
+</script>
+</body>
+</html>
